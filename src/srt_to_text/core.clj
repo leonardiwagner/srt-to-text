@@ -3,13 +3,16 @@
             [srt-to-text.charset-detector :as charset-detector]))
 
 
-(defn parse-lines [lines]
-  (parser/parse lines))
+(defn parse-lines [lines options]
+  (parser/parse lines options))
 
-(defn parse-file [path]
-  (let [charset (charset-detector/detect path)]
-    (with-open [reader (clojure.java.io/reader path :encoding charset)]
-      (parser/parse (line-seq reader)))))
+(defn parse-file
+  ([path]
+   (parse-file path {}))
+  ([path options]
+   (let [charset (charset-detector/detect path)]
+     (with-open [reader (clojure.java.io/reader path :encoding charset)]
+       (parser/parse (line-seq reader) options)))))
 
 (defn get-parsed-text [parsed-lines]
   (reduce
